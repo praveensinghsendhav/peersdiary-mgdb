@@ -4,7 +4,6 @@ import { rateLimitAuth , authenticate } from "../middleware/auth.middleware";
 import { loginSchema, refreshTokenSchema, logoutSchema, changePasswordSchema, forgotPasswordSchema, resetPasswordSchema, verifyEmailSchema } from "../validation/auth.validation";
 import { AuthController } from "../controller/auth.controller";
 
-
 export class AuthRoutes extends Router {
     constructor() { 
         super(); 

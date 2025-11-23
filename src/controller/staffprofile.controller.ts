@@ -18,7 +18,7 @@ export class StaffProfileController {
   // Create new staff profile
   static async createProfile(req: Request, res: Response) {
     try {
-      const [profile] = await StaffProfileModel.create(req.body);
+      const profile : any = await StaffProfileModel.create(req.body);
       await profile.populate("staffId", "firstName lastName email");
       
       return res.status(201).json({

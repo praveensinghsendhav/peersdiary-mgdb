@@ -2,7 +2,8 @@ import Express from 'express'
 import  cors from "cors";
 import  cookieParser from 'cookie-parser'; 
 import { ProxyRouter } from '../services/proxy-router.services'; 
-
+import dotenv from 'dotenv';
+dotenv.config();
 export class ExpressConfiguration {
     private static instance: ExpressConfiguration;
     application!: Express.Application;
@@ -35,7 +36,6 @@ export class ExpressConfiguration {
         this.application.use(cookieParser());
         this.application.use(Express.json());
         this.application.use(Express.urlencoded({ extended: true }));
-  
         this.application.use(`/${process.env.API_VERSION}`, ProxyRouter.map());
      
         return this;

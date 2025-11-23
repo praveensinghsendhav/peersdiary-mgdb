@@ -17,7 +17,7 @@ export class RoleController {
   // Create new role
   static async createRole(req: Request, res: Response) {
     try {
-      const [role] = await RoleModel.create(req.body); 
+      const role:any = await RoleModel.create(req.body);  
       await role.populate("permissions.permissionId", "name description resource actions");
 
       return res.status(201).json({

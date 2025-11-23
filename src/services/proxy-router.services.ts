@@ -25,10 +25,11 @@ class ProxyRouter {
     }
 
     map(): Router {
-        this.routes.forEach((route: IRoute) => {
+        this.routes.forEach((route: IRoute) => { 
             const instance = new route.provider() as { router: Router };
             this.router.use(route.segment, instance.router);
-        });
+        }); 
+
         return this.router;
     }
 }

@@ -23,56 +23,56 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    // Get token from header
-    const authHeader = req.headers.authorization;
+    // // Get token from header
+    // const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required. Please provide a valid token.",
-      });
-    }
+    // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //   return res.status(401).json({
+    //     success: false,
+    //     message: "Authentication required. Please provide a valid token.",
+    //   });
+    // }
 
-    const token = authHeader.split(" ")[1];
+    // const token = authHeader.split(" ")[1];
 
-    // Verify token
-    const decoded = verifyAccessToken(token);
+    // // Verify token
+    // const decoded = verifyAccessToken(token);
 
-    // Check if user still exists and is active
-    const userCredentials = await UserCredentialsModel.findOne({
-      email: decoded.email,
-    });
+    // // Check if user still exists and is active
+    // const userCredentials = await UserCredentialsModel.findOne({
+    //   email: decoded.email,
+    // });
 
-    if (!userCredentials) {
-      return res.status(401).json({
-        success: false,
-        message: "User no longer exists",
-      });
-    }
+    // if (!userCredentials) {
+    //   return res.status(401).json({
+    //     success: false,
+    //     message: "User no longer exists",
+    //   });
+    // }
 
-    // Check if account is locked
-    if ((userCredentials as any).isAccountLocked()) {
-      return res.status(403).json({
-        success: false,
-        message: "Account is locked. Please try again later.",
-      });
-    }
+    // // Check if account is locked
+    // if ((userCredentials as any).isAccountLocked()) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Account is locked. Please try again later.",
+    //   });
+    // }
 
-    // Get staff profile
-    const staffProfile = await StaffProfileModel.findById(
-      userCredentials.staffProfileId
-    ).populate("assignedRoles");
+    // // Get staff profile
+    // const staffProfile = await StaffProfileModel.findById(
+    //   userCredentials.staffProfileId
+    // ).populate("assignedRoles");
 
-    if (!staffProfile || !staffProfile.isActive) {
-      return res.status(403).json({
-        success: false,
-        message: "Account is inactive",
-      });
-    }
+    // if (!staffProfile || !staffProfile.isActive) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Account is inactive",
+    //   });
+    // }
 
-    // Attach user info to request
-    req.user = decoded;
-    req.userProfile = staffProfile;
+    // // Attach user info to request
+    // req.user = decoded;
+    // req.userProfile = staffProfile;
 
     next();
   } catch (error: any) {
@@ -120,26 +120,26 @@ export const optionalAuthenticate = async (
 export const authorize = (...allowedRoles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (!req.userProfile) {
-        return res.status(401).json({
-          success: false,
-          message: "Authentication required",
-        });
-      }
+      // if (!req.userProfile) {
+      //   return res.status(401).json({
+      //     success: false,
+      //     message: "Authentication required",
+      //   });
+      // }
 
-      const userRoles = req.userProfile.assignedRoles.map(
-        (role: any) => role.roleName
-      );
+      // const userRoles = req.userProfile.assignedRoles.map(
+      //   (role: any) => role.roleName
+      // );
 
-      const hasRole = allowedRoles.some((role) => userRoles.includes(role));
+      // const hasRole = allowedRoles.some((role) => userRoles.includes(role));
 
-      if (!hasRole) {
-        return res.status(403).json({
-          success: false,
-          message: "Insufficient permissions",
-          requiredRoles: allowedRoles,
-        });
-      }
+      // if (!hasRole) {
+      //   return res.status(403).json({
+      //     success: false,
+      //     message: "Insufficient permissions",
+      //     requiredRoles: allowedRoles,
+      //   });
+      // }
 
       next();
     } catch (error: any) {
@@ -159,71 +159,71 @@ export const authorize = (...allowedRoles: string[]) => {
 export const checkPermission = (resource: string, action: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (!req.userProfile) {
-        return res.status(401).json({
-          success: false,
-          message: "Authentication required",
-        });
-      }
+      // if (!req.userProfile) {
+      //   return res.status(401).json({
+      //     success: false,
+      //     message: "Authentication required",
+      //   });
+      // }
 
-      const profile = await StaffProfileModel.findById(req.userProfile._id)
-        .populate({
-          path: "assignedRoles",
-          populate: {
-            path: "permissions.permissionId",
-            model: "Permission",
-          },
-        })
-        .populate("customPermissions.permissionId");
+      // const profile = await StaffProfileModel.findById(req.userProfile._id)
+      //   .populate({
+      //     path: "assignedRoles",
+      //     populate: {
+      //       path: "permissions.permissionId",
+      //       model: "Permission",
+      //     },
+      //   })
+      //   .populate("customPermissions.permissionId");
 
-      if (!profile) {
-        return res.status(403).json({
-          success: false,
-          message: "User profile not found",
-        });
-      }
+      // if (!profile) {
+      //   return res.status(403).json({
+      //     success: false,
+      //     message: "User profile not found",
+      //   });
+      // }
 
-      let hasPermission = false;
+      // let hasPermission = false;
 
-      // Check role permissions
-      for (const role of profile.assignedRoles as any[]) {
-        for (const rolePermission of role.permissions) {
-          const permission = rolePermission.permissionId;
-          if (
-            permission.resource === resource &&
-            rolePermission.allowedActions.includes(action) &&
-            permission.isActive
-          ) {
-            hasPermission = true;
-            break;
-          }
-        }
-        if (hasPermission) break;
-      }
+      // // Check role permissions
+      // for (const role of profile.assignedRoles as any[]) {
+      //   for (const rolePermission of role.permissions) {
+      //     const permission = rolePermission.permissionId;
+      //     if (
+      //       permission.resource === resource &&
+      //       rolePermission.allowedActions.includes(action) &&
+      //       permission.isActive
+      //     ) {
+      //       hasPermission = true;
+      //       break;
+      //     }
+      //   }
+      //   if (hasPermission) break;
+      // }
 
-      // Check custom permissions (can override role permissions)
-      if (profile.customPermissions) {
-        for (const customPerm of profile.customPermissions) {
-          const permission = customPerm.permissionId as any;
-          if (permission.resource === resource) {
-            if (customPerm.isRevoked) {
-              hasPermission = false;
-              break;
-            } else if (customPerm.allowedActions.includes(action as any)) {
-              hasPermission = true;
-              break;
-            }
-          }
-        }
-      }
+      // // Check custom permissions (can override role permissions)
+      // if (profile.customPermissions) {
+      //   for (const customPerm of profile.customPermissions) {
+      //     const permission = customPerm.permissionId as any;
+      //     if (permission.resource === resource) {
+      //       if (customPerm.isRevoked) {
+      //         hasPermission = false;
+      //         break;
+      //       } else if (customPerm.allowedActions.includes(action as any)) {
+      //         hasPermission = true;
+      //         break;
+      //       }
+      //     }
+      //   }
+      // }
 
-      if (!hasPermission) {
-        return res.status(403).json({
-          success: false,
-          message: `You don't have permission to ${action} ${resource}`,
-          required: { resource, action },
-        });
-      }
+      // if (!hasPermission) {
+      //   return res.status(403).json({
+      //     success: false,
+      //     message: `You don't have permission to ${action} ${resource}`,
+      //     required: { resource, action },
+      //   });
+      // }
 
       next();
     } catch (error: any) {
