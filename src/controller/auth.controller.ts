@@ -437,7 +437,7 @@ export class AuthController {
 
       // Mark token as used
       const tokenIndex = credentials.passwordResetTokens.findIndex(
-        (rt) => rt.token === hashedToken
+        (rt :  any) => rt.token === hashedToken
       );
       if (tokenIndex !== -1) {
         credentials.passwordResetTokens[tokenIndex].used = true;
